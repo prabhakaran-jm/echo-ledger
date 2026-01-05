@@ -3,6 +3,7 @@
 # Files and directories created by pub
 .dart_tool/
 .packages
+.pub-cache/
 build/
 # If you're building an application, you may want to check-in your pubspec.lock
 pubspec.lock
@@ -26,4 +27,13 @@ doc/api/
 *.js.map
 
 .flutter-plugins
-.flutter-plugins-dependencies
+.flutter-plugins-dependencies 
+
+# Serverpod
+.generated/
+.env
+
+# IDE
+.idea/
+.vscode/
+*.iml
