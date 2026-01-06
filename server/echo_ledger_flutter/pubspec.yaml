@@ -27,8 +27,8 @@ dependencies:
   cupertino_icons: ^1.0.5
   flutter:
     sdk: flutter
-  server_client:
-    path: ../server_client
+  echo_ledger_client:
+    path: ../echo_ledger_client
   serverpod_auth_idp_flutter: 3.1.1
   serverpod_flutter: 3.1.1
 
