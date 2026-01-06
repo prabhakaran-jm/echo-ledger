@@ -1,4 +1,4 @@
-import 'package:server_server/server.dart';
+import 'package:echo_ledger_server/server.dart';
 
 /// This is the starting point for your Serverpod server. Typically, there is
 /// no need to modify this file.

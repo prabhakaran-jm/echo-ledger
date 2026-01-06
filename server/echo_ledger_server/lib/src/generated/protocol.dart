@@ -19,11 +19,13 @@ import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
 import 'commitment.dart' as _i5;
 import 'commitment_log.dart' as _i6;
 import 'commitment_proposal.dart' as _i7;
-import 'greetings/greeting.dart' as _i8;
-import 'post_commitment_reflection.dart' as _i9;
+import 'friction_projection.dart' as _i8;
+import 'greetings/greeting.dart' as _i9;
+import 'post_commitment_reflection.dart' as _i10;
 export 'commitment.dart';
 export 'commitment_log.dart';
 export 'commitment_proposal.dart';
+export 'friction_projection.dart';
 export 'greetings/greeting.dart';
 export 'post_commitment_reflection.dart';
 
@@ -349,11 +351,14 @@ class Protocol extends _i1.SerializationManagerServer {
     if (t == _i7.CommitmentProposal) {
       return _i7.CommitmentProposal.fromJson(data) as T;
     }
-    if (t == _i8.Greeting) {
-      return _i8.Greeting.fromJson(data) as T;
+    if (t == _i8.FrictionProjection) {
+      return _i8.FrictionProjection.fromJson(data) as T;
     }
-    if (t == _i9.PostCommitmentReflection) {
-      return _i9.PostCommitmentReflection.fromJson(data) as T;
+    if (t == _i9.Greeting) {
+      return _i9.Greeting.fromJson(data) as T;
+    }
+    if (t == _i10.PostCommitmentReflection) {
+      return _i10.PostCommitmentReflection.fromJson(data) as T;
     }
     if (t == _i1.getType<_i5.Commitment?>()) {
       return (data != null ? _i5.Commitment.fromJson(data) : null) as T;
@@ -364,11 +369,16 @@ class Protocol extends _i1.SerializationManagerServer {
     if (t == _i1.getType<_i7.CommitmentProposal?>()) {
       return (data != null ? _i7.CommitmentProposal.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i8.Greeting?>()) {
-      return (data != null ? _i8.Greeting.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i8.FrictionProjection?>()) {
+      return (data != null ? _i8.FrictionProjection.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i9.PostCommitmentReflection?>()) {
-      return (data != null ? _i9.PostCommitmentReflection.fromJson(data) : null)
+    if (t == _i1.getType<_i9.Greeting?>()) {
+      return (data != null ? _i9.Greeting.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i10.PostCommitmentReflection?>()) {
+      return (data != null
+              ? _i10.PostCommitmentReflection.fromJson(data)
+              : null)
           as T;
     }
     try {
@@ -388,8 +398,9 @@ class Protocol extends _i1.SerializationManagerServer {
       _i5.Commitment => 'Commitment',
       _i6.CommitmentLog => 'CommitmentLog',
       _i7.CommitmentProposal => 'CommitmentProposal',
-      _i8.Greeting => 'Greeting',
-      _i9.PostCommitmentReflection => 'PostCommitmentReflection',
+      _i8.FrictionProjection => 'FrictionProjection',
+      _i9.Greeting => 'Greeting',
+      _i10.PostCommitmentReflection => 'PostCommitmentReflection',
       _ => null,
     };
   }
@@ -410,9 +421,11 @@ class Protocol extends _i1.SerializationManagerServer {
         return 'CommitmentLog';
       case _i7.CommitmentProposal():
         return 'CommitmentProposal';
-      case _i8.Greeting():
+      case _i8.FrictionProjection():
+        return 'FrictionProjection';
+      case _i9.Greeting():
         return 'Greeting';
-      case _i9.PostCommitmentReflection():
+      case _i10.PostCommitmentReflection():
         return 'PostCommitmentReflection';
     }
     className = _i2.Protocol().getClassNameForObject(data);
@@ -445,11 +458,14 @@ class Protocol extends _i1.SerializationManagerServer {
     if (dataClassName == 'CommitmentProposal') {
       return deserialize<_i7.CommitmentProposal>(data['data']);
     }
+    if (dataClassName == 'FrictionProjection') {
+      return deserialize<_i8.FrictionProjection>(data['data']);
+    }
     if (dataClassName == 'Greeting') {
-      return deserialize<_i8.Greeting>(data['data']);
+      return deserialize<_i9.Greeting>(data['data']);
     }
     if (dataClassName == 'PostCommitmentReflection') {
-      return deserialize<_i9.PostCommitmentReflection>(data['data']);
+      return deserialize<_i10.PostCommitmentReflection>(data['data']);
     }
     if (dataClassName.startsWith('serverpod.')) {
       data['className'] = dataClassName.substring(10);
@@ -493,8 +509,8 @@ class Protocol extends _i1.SerializationManagerServer {
         return _i6.CommitmentLog.t;
       case _i7.CommitmentProposal:
         return _i7.CommitmentProposal.t;
-      case _i9.PostCommitmentReflection:
-        return _i9.PostCommitmentReflection.t;
+      case _i10.PostCommitmentReflection:
+        return _i10.PostCommitmentReflection.t;
     }
     return null;
   }

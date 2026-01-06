@@ -14,15 +14,17 @@ import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import 'commitment.dart' as _i2;
 import 'commitment_log.dart' as _i3;
 import 'commitment_proposal.dart' as _i4;
-import 'greetings/greeting.dart' as _i5;
-import 'post_commitment_reflection.dart' as _i6;
+import 'friction_projection.dart' as _i5;
+import 'greetings/greeting.dart' as _i6;
+import 'post_commitment_reflection.dart' as _i7;
 import 'package:serverpod_auth_idp_client/serverpod_auth_idp_client.dart'
-    as _i7;
-import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
     as _i8;
+import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
+    as _i9;
 export 'commitment.dart';
 export 'commitment_log.dart';
 export 'commitment_proposal.dart';
+export 'friction_projection.dart';
 export 'greetings/greeting.dart';
 export 'post_commitment_reflection.dart';
 export 'client.dart';
@@ -70,11 +72,14 @@ class Protocol extends _i1.SerializationManager {
     if (t == _i4.CommitmentProposal) {
       return _i4.CommitmentProposal.fromJson(data) as T;
     }
-    if (t == _i5.Greeting) {
-      return _i5.Greeting.fromJson(data) as T;
+    if (t == _i5.FrictionProjection) {
+      return _i5.FrictionProjection.fromJson(data) as T;
     }
-    if (t == _i6.PostCommitmentReflection) {
-      return _i6.PostCommitmentReflection.fromJson(data) as T;
+    if (t == _i6.Greeting) {
+      return _i6.Greeting.fromJson(data) as T;
+    }
+    if (t == _i7.PostCommitmentReflection) {
+      return _i7.PostCommitmentReflection.fromJson(data) as T;
     }
     if (t == _i1.getType<_i2.Commitment?>()) {
       return (data != null ? _i2.Commitment.fromJson(data) : null) as T;
@@ -85,18 +90,21 @@ class Protocol extends _i1.SerializationManager {
     if (t == _i1.getType<_i4.CommitmentProposal?>()) {
       return (data != null ? _i4.CommitmentProposal.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i5.Greeting?>()) {
-      return (data != null ? _i5.Greeting.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i5.FrictionProjection?>()) {
+      return (data != null ? _i5.FrictionProjection.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i6.PostCommitmentReflection?>()) {
-      return (data != null ? _i6.PostCommitmentReflection.fromJson(data) : null)
+    if (t == _i1.getType<_i6.Greeting?>()) {
+      return (data != null ? _i6.Greeting.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i7.PostCommitmentReflection?>()) {
+      return (data != null ? _i7.PostCommitmentReflection.fromJson(data) : null)
           as T;
     }
     try {
-      return _i7.Protocol().deserialize<T>(data, t);
+      return _i8.Protocol().deserialize<T>(data, t);
     } on _i1.DeserializationTypeNotFoundException catch (_) {}
     try {
-      return _i8.Protocol().deserialize<T>(data, t);
+      return _i9.Protocol().deserialize<T>(data, t);
     } on _i1.DeserializationTypeNotFoundException catch (_) {}
     return super.deserialize<T>(data, t);
   }
@@ -106,8 +114,9 @@ class Protocol extends _i1.SerializationManager {
       _i2.Commitment => 'Commitment',
       _i3.CommitmentLog => 'CommitmentLog',
       _i4.CommitmentProposal => 'CommitmentProposal',
-      _i5.Greeting => 'Greeting',
-      _i6.PostCommitmentReflection => 'PostCommitmentReflection',
+      _i5.FrictionProjection => 'FrictionProjection',
+      _i6.Greeting => 'Greeting',
+      _i7.PostCommitmentReflection => 'PostCommitmentReflection',
       _ => null,
     };
   }
@@ -128,16 +137,18 @@ class Protocol extends _i1.SerializationManager {
         return 'CommitmentLog';
       case _i4.CommitmentProposal():
         return 'CommitmentProposal';
-      case _i5.Greeting():
+      case _i5.FrictionProjection():
+        return 'FrictionProjection';
+      case _i6.Greeting():
         return 'Greeting';
-      case _i6.PostCommitmentReflection():
+      case _i7.PostCommitmentReflection():
         return 'PostCommitmentReflection';
     }
-    className = _i7.Protocol().getClassNameForObject(data);
+    className = _i8.Protocol().getClassNameForObject(data);
     if (className != null) {
       return 'serverpod_auth_idp.$className';
     }
-    className = _i8.Protocol().getClassNameForObject(data);
+    className = _i9.Protocol().getClassNameForObject(data);
     if (className != null) {
       return 'serverpod_auth_core.$className';
     }
@@ -159,19 +170,22 @@ class Protocol extends _i1.SerializationManager {
     if (dataClassName == 'CommitmentProposal') {
       return deserialize<_i4.CommitmentProposal>(data['data']);
     }
+    if (dataClassName == 'FrictionProjection') {
+      return deserialize<_i5.FrictionProjection>(data['data']);
+    }
     if (dataClassName == 'Greeting') {
-      return deserialize<_i5.Greeting>(data['data']);
+      return deserialize<_i6.Greeting>(data['data']);
     }
     if (dataClassName == 'PostCommitmentReflection') {
-      return deserialize<_i6.PostCommitmentReflection>(data['data']);
+      return deserialize<_i7.PostCommitmentReflection>(data['data']);
     }
     if (dataClassName.startsWith('serverpod_auth_idp.')) {
       data['className'] = dataClassName.substring(19);
-      return _i7.Protocol().deserializeByClassName(data);
+      return _i8.Protocol().deserializeByClassName(data);
     }
     if (dataClassName.startsWith('serverpod_auth_core.')) {
       data['className'] = dataClassName.substring(20);
-      return _i8.Protocol().deserializeByClassName(data);
+      return _i9.Protocol().deserializeByClassName(data);
     }
     return super.deserializeByClassName(data);
   }

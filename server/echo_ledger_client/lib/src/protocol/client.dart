@@ -16,8 +16,10 @@ import 'package:serverpod_client/serverpod_client.dart' as _i2;
 import 'dart:async' as _i3;
 import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
     as _i4;
-import 'package:echo_ledger_client/src/protocol/greetings/greeting.dart' as _i5;
-import 'protocol.dart' as _i6;
+import 'package:echo_ledger_client/src/protocol/friction_projection.dart'
+    as _i5;
+import 'package:echo_ledger_client/src/protocol/greetings/greeting.dart' as _i6;
+import 'protocol.dart' as _i7;
 
 /// By extending [EmailIdpBaseEndpoint], the email identity provider endpoints
 /// are made available on the server and enable the corresponding sign-in widget
@@ -233,6 +235,38 @@ class EndpointJwtRefresh extends _i4.EndpointRefreshJwtTokens {
   );
 }
 
+/// Endpoint for computing historical friction projections for a user.
+/// {@category Endpoint}
+class EndpointFrictionProjection extends _i2.EndpointRef {
+  EndpointFrictionProjection(_i2.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'frictionProjection';
+
+  /// Computes a [FrictionProjection] for the given user and category.
+  ///
+  /// The projection is based on:
+  /// - Completed commitments for the user in the given [category].
+  /// - Their associated [CommitmentLog] entries.
+  /// - Their associated [PostCommitmentReflection] records.
+  ///
+  /// The [perceivedWeeklyEffort] parameter is used as the baseline for
+  /// calculating effort overrun percentages.
+  _i3.Future<_i5.FrictionProjection> project(
+    int userId,
+    String category,
+    double perceivedWeeklyEffort,
+  ) => caller.callServerEndpoint<_i5.FrictionProjection>(
+    'frictionProjection',
+    'project',
+    {
+      'userId': userId,
+      'category': category,
+      'perceivedWeeklyEffort': perceivedWeeklyEffort,
+    },
+  );
+}
+
 /// This is an example endpoint that returns a greeting message through
 /// its [hello] method.
 /// {@category Endpoint}
@@ -243,8 +277,8 @@ class EndpointGreeting extends _i2.EndpointRef {
   String get name => 'greeting';
 
   /// Returns a personalized greeting message: "Hello {name}".
-  _i3.Future<_i5.Greeting> hello(String name) =>
-      caller.callServerEndpoint<_i5.Greeting>(
+  _i3.Future<_i6.Greeting> hello(String name) =>
+      caller.callServerEndpoint<_i6.Greeting>(
         'greeting',
         'hello',
         {'name': name},
@@ -282,7 +316,7 @@ class Client extends _i2.ServerpodClientShared {
     bool? disconnectStreamsOnLostInternetConnection,
   }) : super(
          host,
-         _i6.Protocol(),
+         _i7.Protocol(),
          securityContext: securityContext,
          streamingConnectionTimeout: streamingConnectionTimeout,
          connectionTimeout: connectionTimeout,
@@ -293,6 +327,7 @@ class Client extends _i2.ServerpodClientShared {
        ) {
     emailIdp = EndpointEmailIdp(this);
     jwtRefresh = EndpointJwtRefresh(this);
+    frictionProjection = EndpointFrictionProjection(this);
     greeting = EndpointGreeting(this);
     modules = Modules(this);
   }
@@ -300,6 +335,8 @@ class Client extends _i2.ServerpodClientShared {
   late final EndpointEmailIdp emailIdp;
 
   late final EndpointJwtRefresh jwtRefresh;
+
+  late final EndpointFrictionProjection frictionProjection;
 
   late final EndpointGreeting greeting;
 
@@ -309,6 +346,7 @@ class Client extends _i2.ServerpodClientShared {
   Map<String, _i2.EndpointRef> get endpointRefLookup => {
     'emailIdp': emailIdp,
     'jwtRefresh': jwtRefresh,
+    'frictionProjection': frictionProjection,
     'greeting': greeting,
   };
 

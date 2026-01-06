@@ -1,0 +1,8 @@
+class: FrictionProjection
+fields:
+  similarCommitmentCount: int
+  avgWeeklyEffortOverrunPct: double
+  mostCommonDropOffWeek: int?
+  regretLikelihoodPct: int
+
+
