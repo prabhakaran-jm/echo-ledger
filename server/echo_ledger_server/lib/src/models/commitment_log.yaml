@@ -1,0 +1,9 @@
+class: CommitmentLog
+table: commitment_log
+fields:
+  commitmentId: int
+  weekIndex: int
+  actualEffortHours: double
+  frictionScore: int
+  skipped: bool
+  createdAt: DateTime

@@ -1,0 +1,10 @@
+class: CommitmentProposal
+table: commitment_proposal
+fields:
+  userId: int
+  title: String
+  category: String
+  perceivedWeeklyEffort: double
+  perceivedDurationWeeks: int
+  effortType: String
+  createdAt: DateTime

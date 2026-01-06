@@ -1,0 +1,9 @@
+class: PostCommitmentReflection
+table: post_commitment_reflection
+fields:
+  commitmentId: int
+  regretScore: int
+  satisfactionScore: int
+  wouldRepeat: String
+  notes: String?
+  createdAt: DateTime

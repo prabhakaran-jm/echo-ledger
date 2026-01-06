@@ -1,0 +1,8 @@
+class: Commitment
+table: commitment
+fields:
+  userId: int
+  proposalId: int
+  status: String
+  startedAt: DateTime
+  endedAt: DateTime?
