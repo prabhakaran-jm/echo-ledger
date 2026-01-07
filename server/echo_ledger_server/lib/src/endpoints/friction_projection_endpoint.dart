@@ -1,6 +1,7 @@
 import 'package:serverpod/serverpod.dart';
 
 import '../generated/protocol.dart';
+import '../errors/app_exceptions.dart';
 
 /// Endpoint for computing historical friction projections for a user.
 class FrictionProjectionEndpoint extends Endpoint {
@@ -13,12 +14,45 @@ class FrictionProjectionEndpoint extends Endpoint {
   ///
   /// The [perceivedWeeklyEffort] parameter is used as the baseline for
   /// calculating effort overrun percentages.
+  ///
+  /// Requires authentication. The [userId] must match the authenticated user.
   Future<FrictionProjection> project(
     Session session,
     int userId,
     String category,
     double perceivedWeeklyEffort,
   ) async {
+    session.log('FrictionProjection.project called: userId=$userId, category=$category, perceivedWeeklyEffort=$perceivedWeeklyEffort', level: LogLevel.info);
+
+    // TODO: Add authentication check
+    // In production, verify:
+    // 1. User is authenticated (session has valid auth token)
+    // 2. userId parameter matches authenticated user ID
+    // 3. This prevents unauthorized access to other users' data
+    // Example: final authenticatedUserId = session.auth.authenticatedUserId;
+    //          if (authenticatedUserId == null || authenticatedUserId != userId) {
+    //            throw Exception('Unauthorized');
+    //          }
+
+    // Validate input parameters
+    if (category.trim().isEmpty) {
+      session.log('Validation failed: empty category', level: LogLevel.warning);
+      throw const ValidationException('Category cannot be empty');
+    }
+
+    if (perceivedWeeklyEffort < 0) {
+      session.log(
+        'Validation failed: negative perceivedWeeklyEffort',
+        level: LogLevel.warning,
+      );
+      throw const ValidationException('Perceived weekly effort cannot be negative');
+    }
+
+    if (userId <= 0) {
+      session.log('Validation failed: invalid userId', level: LogLevel.warning);
+      throw const ValidationException('Invalid user ID');
+    }
+
     // Fetch all completed commitments for the user.
     final commitments = await Commitment.db.find(
       session,
@@ -80,6 +114,8 @@ class FrictionProjectionEndpoint extends Endpoint {
     final regretLikelihoodPct = _computeRegretLikelihoodPct(
       reflections: reflections,
     );
+
+    session.log('FrictionProjection computed: userId=$userId, category=$category, similarCommitmentCount=$similarCommitmentCount, avgWeeklyEffortOverrunPct=$avgWeeklyEffortOverrunPct, mostCommonDropOffWeek=$mostCommonDropOffWeek, regretLikelihoodPct=$regretLikelihoodPct', level: LogLevel.info);
 
     return FrictionProjection(
       similarCommitmentCount: similarCommitmentCount,

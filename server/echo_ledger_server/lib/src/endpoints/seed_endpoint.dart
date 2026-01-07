@@ -1,8 +1,10 @@
 import 'package:serverpod/serverpod.dart';
 
 import '../generated/protocol.dart';
+import '../errors/app_exceptions.dart';
 
 /// Temporary endpoint for seeding demo data.
+/// Only available in development mode.
 /// Remove this endpoint before production.
 class SeedEndpoint extends Endpoint {
   /// Seeds minimal demo data for friction projection testing.
@@ -13,7 +15,26 @@ class SeedEndpoint extends Endpoint {
   /// - Reflections with regret scores >= 3
   ///
   /// Idempotent: safe to call multiple times.
+  ///
+  /// Only available in development mode. Throws an exception in production.
   Future<String> seedDemoData(Session session) async {
+    session.log('SeedEndpoint.seedDemoData called', level: LogLevel.info);
+
+    // Protect this endpoint - only allow in development
+    // Check if we're in production by looking at the config
+    final isProduction =
+        session.serverpod.config.apiServer.publicScheme == 'https' &&
+        session.serverpod.config.apiServer.publicHost != 'localhost';
+
+    // Also check environment variable as a fallback
+    final envMode = const String.fromEnvironment('MODE', defaultValue: '');
+    final isProductionEnv = envMode.toLowerCase() == 'production';
+
+    if (isProduction || isProductionEnv) {
+      throw const OperationNotAllowedException(
+        'Seed endpoint is disabled in production',
+      );
+    }
     // Check if data already exists
     final existingProposals = await CommitmentProposal.db.find(
       session,
@@ -22,6 +43,10 @@ class SeedEndpoint extends Endpoint {
     );
 
     if (existingProposals.isNotEmpty) {
+      session.log(
+        'Demo data already exists, skipping seed',
+        level: LogLevel.info,
+      );
       return 'Demo data already exists. Skipping seed.';
     }
 
@@ -147,6 +172,12 @@ class SeedEndpoint extends Endpoint {
       ],
     );
 
-    return 'Demo data seeded successfully: ${proposals.length} proposals, ${commitments.length} commitments, ${logs.length} logs, 2 reflections';
+    final result =
+        'Demo data seeded successfully: ${proposals.length} proposals, ${commitments.length} commitments, ${logs.length} logs, 2 reflections';
+    session.log(
+      'Demo data seeded successfully: proposals=${proposals.length}, commitments=${commitments.length}, logs=${logs.length}, reflections=2',
+      level: LogLevel.info,
+    );
+    return result;
   }
 }
