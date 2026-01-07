@@ -2,6 +2,7 @@ import 'package:serverpod/serverpod.dart';
 
 import '../generated/protocol.dart';
 import '../errors/app_exceptions.dart';
+import '../utils/rate_limiter.dart';
 
 /// Endpoint for computing historical friction projections for a user.
 class FrictionProjectionEndpoint extends Endpoint {
@@ -23,6 +24,21 @@ class FrictionProjectionEndpoint extends Endpoint {
     double perceivedWeeklyEffort,
   ) async {
     session.log('FrictionProjection.project called: userId=$userId, category=$category, perceivedWeeklyEffort=$perceivedWeeklyEffort', level: LogLevel.info);
+
+    // Rate limiting: 100 requests per minute per userId
+    final rateLimitKey = 'friction_projection_user_$userId';
+    final rateLimitAllowed = await RateLimiter.checkRateLimit(
+      session,
+      rateLimitKey,
+      100, // max requests
+      60, // per 60 seconds
+    );
+
+    if (!rateLimitAllowed) {
+      throw const RateLimitExceededException(
+        'Too many requests. Please try again in a minute.',
+      );
+    }
 
     // TODO: Add authentication check
     // In production, verify:

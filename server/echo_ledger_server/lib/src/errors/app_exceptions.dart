@@ -38,3 +38,9 @@ class OperationNotAllowedException extends AppException {
       : super(message ?? 'Operation not allowed', statusCode: 403);
 }
 
+/// Thrown when rate limit is exceeded.
+class RateLimitExceededException extends AppException {
+  const RateLimitExceededException([String? message])
+      : super(message ?? 'Rate limit exceeded. Please try again later.', statusCode: 429);
+}
+
