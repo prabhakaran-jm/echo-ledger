@@ -22,11 +22,39 @@ class _FrictionProjectionScreenState extends State<FrictionProjectionScreen> {
     'Finance',
   ];
 
-  String _selectedCategory = 'Health';
+  String _selectedCategory = 'Learning';
 
   bool _isLoading = false;
+  bool _isSeeding = false;
   String? _errorMessage;
+  String? _seedMessage;
   FrictionProjection? _projection;
+
+  Future<void> _seedDemoData() async {
+    setState(() {
+      _isSeeding = true;
+      _seedMessage = null;
+      _errorMessage = null;
+    });
+
+    try {
+      final result = await client.seed.seedDemoData();
+      setState(() {
+        _seedMessage = result;
+        _errorMessage = null;
+      });
+    } catch (e) {
+      setState(() {
+        _seedMessage = 'Error: $e';
+      });
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isSeeding = false;
+        });
+      }
+    }
+  }
 
   Future<void> _runProjection() async {
     setState(() {
@@ -83,6 +111,19 @@ class _FrictionProjectionScreenState extends State<FrictionProjectionScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Historical Friction Projection'),
+        actions: [
+          IconButton(
+            icon: _isSeeding
+                ? const SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : Icon(Icons.auto_fix_high),
+            tooltip: 'Seed demo data',
+            onPressed: _isSeeding ? null : _seedDemoData,
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -142,6 +183,18 @@ class _FrictionProjectionScreenState extends State<FrictionProjectionScreen> {
               ),
             ),
             const SizedBox(height: 16),
+            if (_seedMessage != null)
+              Card(
+                color: Colors.green[50],
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Text(
+                    _seedMessage!,
+                    style: TextStyle(color: Colors.green[900]),
+                  ),
+                ),
+              ),
+            if (_seedMessage != null) const SizedBox(height: 8),
             if (_errorMessage != null)
               Text(
                 _errorMessage!,

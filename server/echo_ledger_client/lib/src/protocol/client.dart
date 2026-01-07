@@ -267,6 +267,30 @@ class EndpointFrictionProjection extends _i2.EndpointRef {
   );
 }
 
+/// Temporary endpoint for seeding demo data.
+/// Remove this endpoint before production.
+/// {@category Endpoint}
+class EndpointSeed extends _i2.EndpointRef {
+  EndpointSeed(_i2.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'seed';
+
+  /// Seeds minimal demo data for friction projection testing.
+  ///
+  /// Creates:
+  /// - 3 completed commitments in "Learning" category
+  /// - Logs with skipped weeks and effort overruns
+  /// - Reflections with regret scores >= 3
+  ///
+  /// Idempotent: safe to call multiple times.
+  _i3.Future<String> seedDemoData() => caller.callServerEndpoint<String>(
+    'seed',
+    'seedDemoData',
+    {},
+  );
+}
+
 /// This is an example endpoint that returns a greeting message through
 /// its [hello] method.
 /// {@category Endpoint}
@@ -328,6 +352,7 @@ class Client extends _i2.ServerpodClientShared {
     emailIdp = EndpointEmailIdp(this);
     jwtRefresh = EndpointJwtRefresh(this);
     frictionProjection = EndpointFrictionProjection(this);
+    seed = EndpointSeed(this);
     greeting = EndpointGreeting(this);
     modules = Modules(this);
   }
@@ -338,6 +363,8 @@ class Client extends _i2.ServerpodClientShared {
 
   late final EndpointFrictionProjection frictionProjection;
 
+  late final EndpointSeed seed;
+
   late final EndpointGreeting greeting;
 
   late final Modules modules;
@@ -347,6 +374,7 @@ class Client extends _i2.ServerpodClientShared {
     'emailIdp': emailIdp,
     'jwtRefresh': jwtRefresh,
     'frictionProjection': frictionProjection,
+    'seed': seed,
     'greeting': greeting,
   };
 

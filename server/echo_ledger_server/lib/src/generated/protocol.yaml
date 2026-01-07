@@ -10,5 +10,7 @@ jwtRefresh:
   - refreshAccessToken:
 frictionProjection:
   - project:
+seed:
+  - seedDemoData:
 greeting:
   - hello:

@@ -134,6 +134,8 @@ class TestEndpoints {
 
   late final _FrictionProjectionEndpoint frictionProjection;
 
+  late final _SeedEndpoint seed;
+
   late final _GreetingEndpoint greeting;
 }
 
@@ -153,6 +155,10 @@ class _InternalTestEndpoints extends TestEndpoints
       serializationManager,
     );
     frictionProjection = _FrictionProjectionEndpoint(
+      endpoints,
+      serializationManager,
+    );
+    seed = _SeedEndpoint(
       endpoints,
       serializationManager,
     );
@@ -493,6 +499,45 @@ class _FrictionProjectionEndpoint {
                   _localCallContext.arguments,
                 )
                 as _i3.Future<_i5.FrictionProjection>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+}
+
+class _SeedEndpoint {
+  _SeedEndpoint(
+    this._endpointDispatch,
+    this._serializationManager,
+  );
+
+  final _i2.EndpointDispatch _endpointDispatch;
+
+  final _i2.SerializationManager _serializationManager;
+
+  _i3.Future<String> seedDemoData(_i1.TestSessionBuilder sessionBuilder) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'seed',
+            method: 'seedDemoData',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'seed',
+          methodName: 'seedDemoData',
+          parameters: _i1.testObjectToJson({}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _i3.Future<String>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
