@@ -16,6 +16,13 @@ The system highlights:
 
 No advice. No judgment. Just evidence.
 
+## Try it
+
+- **Web app:** https://echo-ledger.serverpod.space/app  
+- **API:** https://echo-ledger.api.serverpod.space  
+
+Seed demo data (magic-wand icon), then run a projection with User ID 1, Category Learning, Perceived effort 5.
+
 ## Tech Stack
 - Flutter (client)
 - Serverpod 3 (stateful Dart backend)
@@ -33,8 +40,8 @@ That requires:
 Serverpod is not optional infrastructure — it is the product.
 
 ## Repository Structure
-- `/flutter_app` – Flutter client
-- `/server` – Serverpod backend and generated client
-- `/docs` – architecture, data model, demo script
+- `server/echo_ledger_flutter` – Flutter client
+- `server/echo_ledger_server` – Serverpod backend
+- `server/echo_ledger_client` – generated client
 
 
