@@ -26,17 +26,26 @@ class FrictionProjectionEndpoint extends Endpoint {
     session.log('FrictionProjection.project called: userId=$userId, category=$category, perceivedWeeklyEffort=$perceivedWeeklyEffort', level: LogLevel.info);
 
     // Rate limiting: 100 requests per minute per userId
-    final rateLimitKey = 'friction_projection_user_$userId';
-    final rateLimitAllowed = await RateLimiter.checkRateLimit(
-      session,
-      rateLimitKey,
-      100, // max requests
-      60, // per 60 seconds
-    );
-
-    if (!rateLimitAllowed) {
-      throw const RateLimitExceededException(
-        'Too many requests. Please try again in a minute.',
+    // On Serverpod Cloud, local cache may be unavailable — allow request if rate limiter fails
+    try {
+      final rateLimitKey = 'friction_projection_user_$userId';
+      final rateLimitAllowed = await RateLimiter.checkRateLimit(
+        session,
+        rateLimitKey,
+        100,
+        60,
+      );
+      if (!rateLimitAllowed) {
+        throw const RateLimitExceededException(
+          'Too many requests. Please try again in a minute.',
+        );
+      }
+    } on RateLimitExceededException {
+      rethrow;
+    } catch (e) {
+      session.log(
+        'Rate limiter failed, allowing request: $e',
+        level: LogLevel.warning,
       );
     }
 
