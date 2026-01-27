@@ -20,17 +20,14 @@ class SeedEndpoint extends Endpoint {
   Future<String> seedDemoData(Session session) async {
     session.log('SeedEndpoint.seedDemoData called', level: LogLevel.info);
 
-    // Protect this endpoint - only allow in development
-    // Check if we're in production by looking at the config
-    final isProduction =
-        session.serverpod.config.apiServer.publicScheme == 'https' &&
-        session.serverpod.config.apiServer.publicHost != 'localhost';
+    // Protect this endpoint - only allow in development or on Serverpod Cloud (for hackathon demo)
+    final host = session.serverpod.config.apiServer.publicHost;
+    final isHttps = session.serverpod.config.apiServer.publicScheme == 'https';
+    final isLocalhost = host == 'localhost' || host.startsWith('127.');
+    final isServerpodCloud = host.contains('serverpod.space');
 
-    // Also check environment variable as a fallback
-    final envMode = const String.fromEnvironment('MODE', defaultValue: '');
-    final isProductionEnv = envMode.toLowerCase() == 'production';
-
-    if (isProduction || isProductionEnv) {
+    // Allow: localhost (dev) or Serverpod Cloud (hackathon demo). Block other production.
+    if (isHttps && !isLocalhost && !isServerpodCloud) {
       throw const OperationNotAllowedException(
         'Seed endpoint is disabled in production',
       );

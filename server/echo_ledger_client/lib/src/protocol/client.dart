@@ -252,6 +252,8 @@ class EndpointFrictionProjection extends _i2.EndpointRef {
   ///
   /// The [perceivedWeeklyEffort] parameter is used as the baseline for
   /// calculating effort overrun percentages.
+  ///
+  /// Requires authentication. The [userId] must match the authenticated user.
   _i3.Future<_i5.FrictionProjection> project(
     int userId,
     String category,
@@ -268,6 +270,7 @@ class EndpointFrictionProjection extends _i2.EndpointRef {
 }
 
 /// Temporary endpoint for seeding demo data.
+/// Only available in development mode.
 /// Remove this endpoint before production.
 /// {@category Endpoint}
 class EndpointSeed extends _i2.EndpointRef {
@@ -284,6 +287,8 @@ class EndpointSeed extends _i2.EndpointRef {
   /// - Reflections with regret scores >= 3
   ///
   /// Idempotent: safe to call multiple times.
+  ///
+  /// Only available in development mode. Throws an exception in production.
   _i3.Future<String> seedDemoData() => caller.callServerEndpoint<String>(
     'seed',
     'seedDemoData',

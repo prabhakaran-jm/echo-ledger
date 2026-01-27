@@ -125,7 +125,7 @@ class _FrictionProjectionScreenState extends State<FrictionProjectionScreen> {
           ),
         ],
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:serverpod_auth_idp_flutter/serverpod_auth_idp_flutter.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/foundation.dart' show kIsWeb, defaultTargetPlatform, TargetPlatform;
 
 import 'services/serverpod_client.dart';
 import 'screens/friction_projection_screen.dart';
@@ -8,12 +8,20 @@ import 'screens/friction_projection_screen.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Use localhost for web/desktop, 10.0.2.2 for Android emulator
-  final serverUrl = kIsWeb 
-      ? 'http://localhost:8080/'
-      : 'http://10.0.2.2:8080/';
-  
-  await initServerpodClient(baseUrlOverride: serverUrl);
+  // For web: use config.json (production) or localhost (dev)
+  // For desktop: use localhost
+  // For Android: use 10.0.2.2 (emulator)
+  String? serverUrlOverride;
+  if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
+    // Android emulator needs special IP
+    serverUrlOverride = 'http://10.0.2.2:8080/';
+  } else if (!kIsWeb) {
+    // Desktop (Linux/macOS/Windows) - use localhost
+    serverUrlOverride = 'http://localhost:8080/';
+  }
+  // For web: let it load from config.json (production) or use localhost fallback
+
+  await initServerpodClient(baseUrlOverride: serverUrlOverride);
   client.auth.initialize();
 
   runApp(const MyApp());
