@@ -17,10 +17,11 @@ import 'commitment_proposal.dart' as _i4;
 import 'friction_projection.dart' as _i5;
 import 'greetings/greeting.dart' as _i6;
 import 'post_commitment_reflection.dart' as _i7;
+import 'package:echo_ledger_client/src/utils/rate_limit_data.dart' as _i8;
 import 'package:serverpod_auth_idp_client/serverpod_auth_idp_client.dart'
-    as _i8;
-import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
     as _i9;
+import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
+    as _i10;
 export 'commitment.dart';
 export 'commitment_log.dart';
 export 'commitment_proposal.dart';
@@ -100,17 +101,24 @@ class Protocol extends _i1.SerializationManager {
       return (data != null ? _i7.PostCommitmentReflection.fromJson(data) : null)
           as T;
     }
-    try {
-      return _i8.Protocol().deserialize<T>(data, t);
-    } on _i1.DeserializationTypeNotFoundException catch (_) {}
+    if (t == _i8.RateLimitData) {
+      return _i8.RateLimitData.fromJson(data) as T;
+    }
+    if (t == _i1.getType<_i8.RateLimitData?>()) {
+      return (data != null ? _i8.RateLimitData.fromJson(data) : null) as T;
+    }
     try {
       return _i9.Protocol().deserialize<T>(data, t);
+    } on _i1.DeserializationTypeNotFoundException catch (_) {}
+    try {
+      return _i10.Protocol().deserialize<T>(data, t);
     } on _i1.DeserializationTypeNotFoundException catch (_) {}
     return super.deserialize<T>(data, t);
   }
 
   static String? getClassNameForType(Type type) {
     return switch (type) {
+      _i8.RateLimitData => 'RateLimitData',
       _i2.Commitment => 'Commitment',
       _i3.CommitmentLog => 'CommitmentLog',
       _i4.CommitmentProposal => 'CommitmentProposal',
@@ -131,6 +139,8 @@ class Protocol extends _i1.SerializationManager {
     }
 
     switch (data) {
+      case _i8.RateLimitData():
+        return 'RateLimitData';
       case _i2.Commitment():
         return 'Commitment';
       case _i3.CommitmentLog():
@@ -144,11 +154,11 @@ class Protocol extends _i1.SerializationManager {
       case _i7.PostCommitmentReflection():
         return 'PostCommitmentReflection';
     }
-    className = _i8.Protocol().getClassNameForObject(data);
+    className = _i9.Protocol().getClassNameForObject(data);
     if (className != null) {
       return 'serverpod_auth_idp.$className';
     }
-    className = _i9.Protocol().getClassNameForObject(data);
+    className = _i10.Protocol().getClassNameForObject(data);
     if (className != null) {
       return 'serverpod_auth_core.$className';
     }
@@ -160,6 +170,9 @@ class Protocol extends _i1.SerializationManager {
     var dataClassName = data['className'];
     if (dataClassName is! String) {
       return super.deserializeByClassName(data);
+    }
+    if (dataClassName == 'RateLimitData') {
+      return deserialize<_i8.RateLimitData>(data['data']);
     }
     if (dataClassName == 'Commitment') {
       return deserialize<_i2.Commitment>(data['data']);
@@ -181,11 +194,11 @@ class Protocol extends _i1.SerializationManager {
     }
     if (dataClassName.startsWith('serverpod_auth_idp.')) {
       data['className'] = dataClassName.substring(19);
-      return _i8.Protocol().deserializeByClassName(data);
+      return _i9.Protocol().deserializeByClassName(data);
     }
     if (dataClassName.startsWith('serverpod_auth_core.')) {
       data['className'] = dataClassName.substring(20);
-      return _i9.Protocol().deserializeByClassName(data);
+      return _i10.Protocol().deserializeByClassName(data);
     }
     return super.deserializeByClassName(data);
   }
@@ -200,10 +213,10 @@ class Protocol extends _i1.SerializationManager {
       return null;
     }
     try {
-      return _i8.Protocol().mapRecordToJson(record);
+      return _i9.Protocol().mapRecordToJson(record);
     } catch (_) {}
     try {
-      return _i9.Protocol().mapRecordToJson(record);
+      return _i10.Protocol().mapRecordToJson(record);
     } catch (_) {}
     throw Exception('Unsupported record type ${record.runtimeType}');
   }

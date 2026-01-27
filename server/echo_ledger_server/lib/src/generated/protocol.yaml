@@ -12,5 +12,6 @@ frictionProjection:
   - project:
 seed:
   - seedDemoData:
+  - clearDemoData:
 greeting:
   - hello:

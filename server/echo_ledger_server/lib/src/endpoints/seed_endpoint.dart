@@ -177,4 +177,64 @@ class SeedEndpoint extends Endpoint {
     );
     return result;
   }
+
+  /// Clears demo data for userId=1, category=Learning so you can re-seed for demo video.
+  /// Uses the same host/safety checks as [seedDemoData].
+  Future<String> clearDemoData(Session session) async {
+    session.log('SeedEndpoint.clearDemoData called', level: LogLevel.info);
+
+    final host = session.serverpod.config.apiServer.publicHost;
+    final isHttps = session.serverpod.config.apiServer.publicScheme == 'https';
+    final isLocalhost = host == 'localhost' || host.startsWith('127.');
+    final isServerpodCloud = host.contains('serverpod.space');
+
+    if (isHttps && !isLocalhost && !isServerpodCloud) {
+      throw const OperationNotAllowedException(
+        'Clear demo endpoint is disabled in production',
+      );
+    }
+
+    const demoUserId = 1;
+    const demoCategory = 'Learning';
+
+    final proposals = await CommitmentProposal.db.find(
+      session,
+      where: (t) =>
+          t.userId.equals(demoUserId) & t.category.equals(demoCategory),
+    );
+    if (proposals.isEmpty) {
+      session.log('No demo data to clear', level: LogLevel.info);
+      return 'No demo data to clear. Seed first, then you can clear.';
+    }
+
+    final proposalIds = proposals.map((p) => p.id!).toSet();
+    final commitments = await Commitment.db.find(
+      session,
+      where: (t) => t.proposalId.inSet(proposalIds),
+    );
+    final commitmentIds = commitments.map((c) => c.id!).toSet();
+
+    await PostCommitmentReflection.db.deleteWhere(
+      session,
+      where: (t) => t.commitmentId.inSet(commitmentIds),
+    );
+    await CommitmentLog.db.deleteWhere(
+      session,
+      where: (t) => t.commitmentId.inSet(commitmentIds),
+    );
+    await Commitment.db.deleteWhere(
+      session,
+      where: (t) => t.proposalId.inSet(proposalIds),
+    );
+    await CommitmentProposal.db.deleteWhere(
+      session,
+      where: (t) => t.id.inSet(proposalIds),
+    );
+
+    session.log(
+      'Demo data cleared: ${proposalIds.length} proposals, ${commitmentIds.length} commitments',
+      level: LogLevel.info,
+    );
+    return 'Demo data cleared. You can seed again for a fresh demo.';
+  }
 }

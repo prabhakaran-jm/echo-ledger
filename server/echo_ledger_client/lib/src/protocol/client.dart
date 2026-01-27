@@ -294,6 +294,14 @@ class EndpointSeed extends _i2.EndpointRef {
     'seedDemoData',
     {},
   );
+
+  /// Clears demo data for userId=1, category=Learning so you can re-seed for demo video.
+  /// Uses the same host/safety checks as [seedDemoData].
+  _i3.Future<String> clearDemoData() => caller.callServerEndpoint<String>(
+    'seed',
+    'clearDemoData',
+    {},
+  );
 }
 
 /// This is an example endpoint that returns a greeting message through

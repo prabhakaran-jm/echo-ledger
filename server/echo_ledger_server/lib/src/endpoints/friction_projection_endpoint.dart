@@ -49,15 +49,24 @@ class FrictionProjectionEndpoint extends Endpoint {
       );
     }
 
-    // TODO: Add authentication check
-    // In production, verify:
-    // 1. User is authenticated (session has valid auth token)
-    // 2. userId parameter matches authenticated user ID
-    // 3. This prevents unauthorized access to other users' data
-    // Example: final authenticatedUserId = session.auth.authenticatedUserId;
-    //          if (authenticatedUserId == null || authenticatedUserId != userId) {
-    //            throw Exception('Unauthorized');
-    //          }
+    // HACKATHON NOTE: Authentication is intentionally disabled for demo purposes.
+    // The seed endpoint creates public User ID 1 that anyone can query.
+    //
+    // In production, implement authentication using serverpod_auth:
+    //   1. Add serverpod_auth dependency to pubspec.yaml
+    //   2. Import 'package:serverpod_auth_server/serverpod_auth_server.dart'
+    //   3. Check authenticated user:
+    //      final authUserId = await session.auth.authenticatedUserId;
+    //      if (authUserId == null) {
+    //        throw AuthenticationRequiredException('Please sign in');
+    //      }
+    //      if (authUserId != userId) {
+    //        throw UnauthorizedAccessException(
+    //          'You can only view your own friction projections',
+    //        );
+    //      }
+    //
+    // For hackathon judging: use User ID 1 with seeded data.
 
     // Validate input parameters
     if (category.trim().isEmpty) {

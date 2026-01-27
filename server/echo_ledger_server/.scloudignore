@@ -35,8 +35,10 @@ config/test.yaml
 # Opting out of ignoring generated files.
 !lib/src/generated/**
 
-# Opting out of ignoring web files.
+# Opting out of ignoring web files (including gitignored Flutter build output).
 !web/**
+!web/app/
+!web/app/**
 
 # Opting out of ignoring the .scloud directory.
 !.scloud/**

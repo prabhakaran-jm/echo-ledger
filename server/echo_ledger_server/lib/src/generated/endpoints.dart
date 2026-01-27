@@ -303,6 +303,17 @@ class Endpoints extends _i1.EndpointDispatch {
               ) async =>
                   (endpoints['seed'] as _i5.SeedEndpoint).seedDemoData(session),
         ),
+        'clearDemoData': _i1.MethodConnector(
+          name: 'clearDemoData',
+          params: {},
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['seed'] as _i5.SeedEndpoint).clearDemoData(
+                session,
+              ),
+        ),
       },
     );
     connectors['greeting'] = _i1.EndpointConnector(

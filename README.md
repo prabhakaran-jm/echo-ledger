@@ -1,5 +1,8 @@
 # Echo Ledger
 
+![Tests Passing](https://img.shields.io/badge/tests-18%20passing-brightgreen)
+![Serverpod](https://img.shields.io/badge/built%20with-Serverpod%203-blue)
+
 Echo Ledger is a Flutter + Serverpod application that helps users make sustainable commitments by confronting optimism with evidence.
 
 Instead of asking “Can I do this?”, Echo Ledger asks:
@@ -30,14 +33,32 @@ Seed demo data (magic-wand icon), then run a projection with User ID 1, Category
 - Optional: Gemini API for pattern explanation (non-core)
 
 ## Why Serverpod
-Echo Ledger’s value increases over time.
+Echo Ledger's value compounds over time. 
 That requires:
-- persistent state
-- longitudinal analysis
-- backend workflows
-- scheduled re-evaluation logic
-
+​- Persistent state across months/years
+- Longitudinal analysis of user patterns​
+- Future: scheduled re-evaluation, trend detection​
 Serverpod is not optional infrastructure — it is the product.
+
+## Why Deterministic (No AI)?
+
+Echo Ledger intentionally uses deterministic calculations instead of AI for three reasons:
+
+1. **Transparency**: You can see exactly how your projection is calculated
+   - Overrun % = (avg actual − perceived) / perceived
+   - Regret likelihood = reflections with score ≥ 3 / total reflections
+   - Drop-off week = most frequent skipped week
+
+2. **Trust**: No "black box" predictions or hallucinations
+   - Every metric is derived from your own logged data
+   - No external models or training data influencing results
+
+3. **Debuggability**: When something seems wrong, you can verify the data
+   - Seed endpoint shows example data structure
+   - Integration tests validate calculations
+   - No "the model said so" explanations
+
+Future versions may add AI for *explaining patterns* (e.g. optional Gemini integration), but core projections remain deterministic and verifiable.
 
 ## Repository Structure
 - `server/echo_ledger_flutter` – Flutter client

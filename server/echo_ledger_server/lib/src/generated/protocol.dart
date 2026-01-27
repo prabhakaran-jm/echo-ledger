@@ -22,6 +22,7 @@ import 'commitment_proposal.dart' as _i7;
 import 'friction_projection.dart' as _i8;
 import 'greetings/greeting.dart' as _i9;
 import 'post_commitment_reflection.dart' as _i10;
+import 'package:echo_ledger_server/src/utils/rate_limit_data.dart' as _i11;
 export 'commitment.dart';
 export 'commitment_log.dart';
 export 'commitment_proposal.dart';
@@ -381,6 +382,12 @@ class Protocol extends _i1.SerializationManagerServer {
               : null)
           as T;
     }
+    if (t == _i11.RateLimitData) {
+      return _i11.RateLimitData.fromJson(data) as T;
+    }
+    if (t == _i1.getType<_i11.RateLimitData?>()) {
+      return (data != null ? _i11.RateLimitData.fromJson(data) : null) as T;
+    }
     try {
       return _i3.Protocol().deserialize<T>(data, t);
     } on _i1.DeserializationTypeNotFoundException catch (_) {}
@@ -395,6 +402,7 @@ class Protocol extends _i1.SerializationManagerServer {
 
   static String? getClassNameForType(Type type) {
     return switch (type) {
+      _i11.RateLimitData => 'RateLimitData',
       _i5.Commitment => 'Commitment',
       _i6.CommitmentLog => 'CommitmentLog',
       _i7.CommitmentProposal => 'CommitmentProposal',
@@ -415,6 +423,8 @@ class Protocol extends _i1.SerializationManagerServer {
     }
 
     switch (data) {
+      case _i11.RateLimitData():
+        return 'RateLimitData';
       case _i5.Commitment():
         return 'Commitment';
       case _i6.CommitmentLog():
@@ -448,6 +458,9 @@ class Protocol extends _i1.SerializationManagerServer {
     var dataClassName = data['className'];
     if (dataClassName is! String) {
       return super.deserializeByClassName(data);
+    }
+    if (dataClassName == 'RateLimitData') {
+      return deserialize<_i11.RateLimitData>(data['data']);
     }
     if (dataClassName == 'Commitment') {
       return deserialize<_i5.Commitment>(data['data']);

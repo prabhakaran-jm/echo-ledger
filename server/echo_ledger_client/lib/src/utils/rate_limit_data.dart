@@ -1,6 +1,7 @@
-import 'package:serverpod/serverpod.dart';
+import 'package:serverpod_client/serverpod_client.dart';
 
-/// Data model for rate limiting cache entries.
+/// Client-side mirror of server RateLimitData for protocol serialization.
+/// Used by generated protocol when deserializing cache entries.
 class RateLimitData implements SerializableModel {
   final int count;
   final int windowStart;
@@ -32,4 +33,3 @@ class RateLimitData implements SerializableModel {
     );
   }
 }
-

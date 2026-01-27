@@ -2,3 +2,7 @@ type: server
 
 client_package_path: ../echo_ledger_client
 server_test_tools_path: test/integration/test_tools
+
+# Required for session.caches.local when storing RateLimitData (rate_limiter.dart)
+extraClasses:
+  - package:echo_ledger_server/src/utils/rate_limit_data.dart:RateLimitData
